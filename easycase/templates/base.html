@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %} EasyCase  {% endblock %}</title>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.10.2.min.js"></script>
+	<link rel="Stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.min.css" media="screen">
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-formhelpers.min.js"></script>
+	<link rel="Stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-formhelpers.min.css" media="screen">
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/tinymce/tinymce.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.cookie.js"></script>
+	<script type="text/javascript">
+	  $(document).ready(function(){
+		$("a").each(function(){
+			$(this).popover('hide')
+		});
+	  });
+	  
+	  $(document).ready(function(){
+	    $("#schedule").each(function(){
+		  $(this).popover('hide')
+		});
+	  });
+	  
+	  tinymce.init({
+	    selector: "textarea#case_editor",
+	    theme: "modern",
+	    width: 400,
+	    height: 800
+	  });
+	  
+	  function saveAs() {
+		var content = '[system]\nrows_per_page=' +
+	  				  document.getElementById('rows_per_page').value + '\nsession_timeout=' +
+	  				  document.getElementById('session_timeout').value + '\n';
+		var csrftoken = $.cookie('csrftoken');
+        var data = new FormData()
+        data.append("data" , content);
+        var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new activeXObject("Microsoft.XMLHTTP");
+        xhr.open( "post", "{% url 'products:upload' %}", true );
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        xhr.send(data);
+      }
+	  
+	  function validate_limit() {
+		 limit = document.getElementById('rows_per_page').value;
+		 
+		 if ( !limit.match(/^\d+$/) || parseInt(limit) < 1 ) {
+			 document.getElementById('save_changes').disabled = true;
+			 document.getElementById('error_msg#1').style.display = "";
+		 } else {
+			 document.getElementById('save_changes').disabled = false;
+			 document.getElementById('error_msg#1').style.display = "none";
+		 }
+	  }
+	  
+	  function validate_timeout() {
+		  timeout = document.getElementById('session_timeout').value;
+		  if ( !timeout.match(/^\d+$/) || parseInt(timeout) < 1 ) {
+		    document.getElementById('save_changes').disabled = true;
+			document.getElementById('error_msg#2').style.display = "";
+		  } else {
+		    document.getElementById('save_changes').disabled = false;
+			document.getElementById('error_msg#2').style.display = "none";
+		  }
+	  }
+	  
+	</script>
+</head>
+
+<body>
+{% load admin_static %}
+{% load i18n %}
+{% load profile %}
+
+<nav class="navbar navbar-inverse" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <a class="navbar-brand" href="{% url 'products:index' %}">EasyCase</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li><a href="{% url 'products:index' %}"><span class="glyphicon glyphicon-home"></span> Product</a></li>
+      {% if products %}
+      	<li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        	<span class="glyphicon glyphicon-book"></span> Project <b class="caret"></b>
+          </a>
+      	  <ul class="dropdown-menu">
+      	    {% for product in products %}
+			  <li><a href="{% url 'products:project_index' product.id %}"
+			   	   data-placement="right" data-trigger="hover"
+			   	   data-html=true data-container="body"
+			   	   data-content="<small>View projects under product {{ product.name }}</small>">
+			    {{ product.name }}
+			  </a>
+			  </li>
+		    {% endfor %}
+      	  </ul>
+        </li>
+      {% else %}
+      	<li><a href="#"><span class="glyphicon glyphicon-book"></span> Project</a></li>
+      {% endif %}
+      
+      {% if projects %}
+      	<li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        	<span class="glyphicon glyphicon-file"></span> Page <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+      	    {% for project in projects %}
+			  <li><a href="{% url 'pages:index' project.id %}"
+			  	   data-trigger="hover" data-placement="right"
+			  	   data-html=true data-container="body"
+			  	   data-content="<small>View pages under project {{ project.name }}</small>">
+			    {{ project.name }}
+			  </a></li>
+		    {% endfor %}
+      	  </ul>
+        </li>
+      {% else %}
+      	<li><a href="#"><span class="glyphicon glyphicon-file"></span> Page</a></li>
+      {% endif %}
+      <li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Case</a></li>
+      <li><a href="{% url 'tasks:index' %}"><span class="glyphicon glyphicon-tasks"></span> Task</a></li>
+    </ul>
+    <p class="navbar-text navbar-right">
+      {% if user.is_active and user.is_staff %}
+      	{% trans 'Welcome,' %}
+        <a data-toggle="modal" data-target="#myModal"><strong>
+        {% filter force_escape %}{% firstof user.get_short_name user.get_username %}{% endfilter %}
+        </strong></a>.
+        {% block userlinks %}
+          <a href="{% url 'pages.views.logout_view' %}">{% trans 'Log out' %}</a>
+        {% endblock %}
+      {% else %}
+        {% block adminlink %}
+          <a href="/admin">{% trans 'Admin Site' %}</a>
+        {% endblock %}
+      {% endif %}
+    </p>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="setTimeout('window.location.reload()', 500)">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Your Profile</h4>
+      </div>
+      <div class="modal-body">
+      	<span class="text-info">Account Information</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="username">User Name</label>
+          <input id="username" class="form-control" type="text" value="{{ user.get_username }}" readonly />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" class="form-control" type="text" value="{{ user.email }}" readonly/>
+        </div>
+      </div>
+      <div class="modal-body">
+      	<span class="text-info">System Preferences</span>
+      </div>
+      <div class="modal-body">
+      	<div class="form-group">
+          <label for="rows_per_page">Rows per Page</label>
+          <input id="rows_per_page" class="form-control" type="text" value="{% limit user.get_username %}"
+           onchange="validate_limit();" />
+          <div id="error_msg#1" style="display:none">
+          	<p class="text-danger">Please enter an integer greater than 0</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="session_timeout">Session Timeout(Minutes):</label>
+          <input id="session_timeout" class="form-control" type="text" value="{% timeout user.get_username %}" 
+          	onchange="validate_timeout();" />
+          <div id="error_msg#2" style="display:none">
+          	<p class="text-danger">Please enter an integer greater than 0</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="setTimeout('window.location.reload()', 500)">Close</button>
+        <button id="save_changes"  type="button" class="btn btn-primary" onclick="saveAs();setTimeout('window.location.reload()', 500)" data-dismiss="modal">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="container">
+  <div class="content">
+    <div class="page-header">
+      <h1>{% block pagename %} Welcome {% endblock %}</h1>
+    </div>
+    {% block content %} 
+	{% endblock %}
+  </div><!-- /content -->
+</div><!-- /container -->
+</body>
+</html>

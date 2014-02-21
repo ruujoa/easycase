@@ -1,0 +1,59 @@
+
+{% extends "base.html" %}
+
+{% block title %} Element - Create {% endblock %}
+
+{% block pagename %} New Element {% endblock %}
+{% block content %} 
+<form action="{% url 'pages:create_element' project_id page_id %}" method="post"> {% csrf_token %}
+  <input type="hidden" name="page_id" value="{{ page_id }}">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.name }}
+  	  </div>
+  	</div>
+  </div>
+  <p class="text-danger">
+  	{{ form.name.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <label for="name">Type</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.type }}
+  	  </div>
+  	</div>
+  </div>
+  <p class="text-danger">
+  	{{ form.type.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <label for="name">Locator</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.locator }}
+  	  </div>
+  	</div>
+  </div>
+  <p class="text-danger">
+  	{{ form.locator.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <label for="name">LocatorType</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.locatorType }}
+  	  </div>
+  	</div>
+  </div>
+  <p class="text-danger">
+  	{{ form.locatorType.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <button class="btn btn-primary btn-sm" type="submit">Add</button>
+    <a class="btn btn-primary btn-sm" href="{% url 'pages:element_index' project_id page_id %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

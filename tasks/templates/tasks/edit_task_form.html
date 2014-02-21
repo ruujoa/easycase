@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+
+{% block title %} Task - Edit {% endblock %}
+{% block pagename %} {{ task.name }} {% endblock %}
+{% block content %} 
+<form action="{% url 'tasks:edit_task' task.id %}" method="post"> {% csrf_token %}
+  <div class="form-group hidden">
+    <label for="name">Name</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.name }}
+  	  </div>
+  	</div>
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <div class="row">
+      <div class="col-xs-5">
+    	{{ form.description }}
+  	  </div>
+  	</div>
+  </div>
+  <div class="form-group">
+    <label for="schedule">Schedule</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.schedule }}
+  	  </div>
+  	</div>
+  </div>
+  <p class="text-danger">
+  	{{ form.schedule.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <label for="after_trigger">Run after other tasks ran</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.after_trigger }}
+      </div>
+    </div>
+  </div>
+  <p class="text-danger">
+  	{{ form.trigger.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <label for="cases_set">Cases Set</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.cases_set }}
+      </div>
+    </div>
+  </div>
+  <p class="text-danger">
+  	{{ form.cases_set.errors.as_text }}
+  </p>
+  <div class="from-group">
+    <button class="btn btn-primary btn-sm" type="submit">Save</button>
+    <a class="btn btn-primary btn-sm" href="{% url 'tasks:index' %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

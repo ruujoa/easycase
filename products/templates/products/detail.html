@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %} Product - Detail {% endblock %}
+
+{% block pagename %} {{ product.name }} {% endblock %}
+{% block content %}
+<h3>Product Manager: <small>{{ product.manager }}</small></h3>
+<h3>Product Expiration Date: <small>{{ product.expiration }}</small></h3>
+
+{% if product.description %}
+<blockquote>
+  <p>{{ product.description }}</p>
+  <small>Product Description</small>
+</blockquote>
+{% endif %}
+
+{% if product.project_set.count > 0 %}
+<h3>Has {{ product.project_set.count }} project{{ product.project_set.count|pluralize }}</h3>
+
+<div class="panel-group" id="accordion">
+{% for project in product.project_set.all %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}">
+          {{ project.name }}
+        </a>
+      </h4>
+    </div>
+    <div id="collapse{{ forloop.counter }}" class="panel-collapse collapsing">
+      <div class="panel-body">
+        <blockquote>
+  		  <p>{{ project.description }}</p>
+          <small>Project Description</small>
+		</blockquote>
+  	  	<p class="lead">Project's Participants: 
+  	  	  {% for user in project.participants.all %}
+		    {{ user }}
+		  {% endfor %}
+		</p>
+  	  	<p class="lead">Project Expiration: {{ project.expiration }}</p>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% endif %}
+<a class="btn btn-primary btn-sm" href="{% url 'products:index' %}">Back</a>
+{% endblock %}

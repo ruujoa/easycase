@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+<script type="text/javascript">
+<!--
+$('#example').tooltip(options)
+//-->
+</script>
+{% block title %} Page - Detail {% endblock %}
+
+{% block pagename %} {{ page.name }} {% endblock %}
+{% block content %}
+<h3>Belong To: <small>{{ page.project }}</small></h3>
+<h3>Page Creator: <small>{{ page.created_by }}</small></h3>
+<h3>Page Created Date: <small>{{ page.created_at }}</small></h3>
+<h3>Has {{ page.element_set.count }} element{{ page.element_set.count|pluralize }}</h3>
+
+<div class="panel-group" id="accordion">
+{% for element in page.element_set.all %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}">
+          {{ element.name }}
+        </a>
+      </h4>
+    </div>
+    <div id="collapse{{ forloop.counter }}" class="panel-collapse collapsing">
+      <div class="panel-body">
+        <p class="lead">Element Type: {{ element.type }}</p>
+  	  	<p class="lead">Locator Expression: {{ element.locatorType|lower }} = {{ element.locator }}</p>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+<a class="btn btn-primary btn-sm" href="{% url 'pages:index' project_id %}">Back</a>
+{% endblock %}

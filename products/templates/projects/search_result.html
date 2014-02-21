@@ -1,0 +1,10 @@
+{% extends "projects/index.html" %}
+{% block pagination %}
+  {% if projects.paginator.num_pages > 0 %}
+    <ul class="pagination">
+	  {% for page_number in projects.paginator.page_range %}
+	    <li><a href="?kw={{ kw }}&product_id={{ product.id }}&page={{ page_number }}">{{ page_number }}</a></li>
+	  {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

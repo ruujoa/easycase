@@ -1,0 +1,26 @@
+
+{% extends "base.html" %}
+
+{% block title %} Page - Create {% endblock %}
+
+{% block pagename %} New Page {% endblock %}
+{% block content %} 
+<form action="{% url 'pages:create_page' project_id %}" method="post"> {% csrf_token %}
+  <input type="hidden" name="project_id" value="{{ project_id }}"/>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.name }}
+  	  </div>
+  	</div>
+  </div>
+  <p class="text-danger">
+  	{{ form.name.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <button class="btn btn-primary btn-sm" type="submit">Add</button>
+    <a class="btn btn-primary btn-sm" href="{% url 'pages:index' project_id %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

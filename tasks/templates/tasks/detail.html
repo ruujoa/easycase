@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} Task - Detail {% endblock %}
+
+{% block pagename %} {{ task.name }} {% endblock %}
+{% block content %}
+
+{% if product.description %}
+<blockquote>
+  <p>{{ product.description }}</p>
+  <small>Product Description</small>
+</blockquote>
+{% endif %}
+
+
+<a class="btn btn-primary btn-sm" href="{% url 'tasks:index' %}">Back</a>
+{% endblock %}

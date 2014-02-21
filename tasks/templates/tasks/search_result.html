@@ -1,0 +1,10 @@
+{% extends "tasks/index.html" %}
+{% block pagination %}
+	{% if tasks.paginator.num_pages > 0 %}
+	<ul class="pagination">
+	  {% for page_number in tasks.paginator.page_range %}
+	      <li><a href="?kw={{ kw }}&page={{ page_number }}">{{ page_number }}</a></li>
+	  {% endfor %}
+	</ul>
+	{% endif %}
+{% endblock %}

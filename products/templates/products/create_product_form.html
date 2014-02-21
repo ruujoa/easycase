@@ -1,0 +1,83 @@
+
+{% extends "base.html" %}
+
+{% block title %} Product - Create {% endblock %}
+
+{% block pagename %} New Product {% endblock %}
+{% block content %} 
+<form action="{% url 'products:create_product' %}" method="post"> {% csrf_token %}
+  
+  <div class="form-group">
+    <label for="name">Name</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.name }}
+      </div>
+    </div>
+  </div>
+  <p class="text-danger">
+  	{{ form.name.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <div class="row">
+      <div class="col-xs-5">
+    	{{ form.description }}
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="manager">Manager</label>
+    <div class="row">
+      <div class="col-xs-3">
+    	{{ form.manager }}
+      </div>
+    </div>
+  </div>
+  <p class="text-danger">
+  	{{ form.manager.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <label for="expiration">Expiration</label>
+    <div class="bfh-datepicker" data-format="y-m-d">
+	<div class="input-group bfh-datepicker-toggle" data-toggle="bfh-datepicker">
+	  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+	  <div class="row">
+      	<div class="col-xs-4">
+    	  {{ form.expiration }}
+      	</div>
+      </div>
+	</div>
+  	<div class="bfh-datepicker-calendar">
+    <table class="calendar table table-bordered">
+      <thead>
+        <tr class="months-header">
+          <th class="month" colspan="4">
+            <a class="previous" href="#"><i class="glyphicon glyphicon-chevron-left"></i></a>
+            <span></span>
+            <a class="next" href="#"><i class="glyphicon glyphicon-chevron-right"></i></a>
+          </th>
+          <th class="year" colspan="3">
+            <a class="previous" href="#"><i class="glyphicon glyphicon-chevron-left"></i></a>
+            <span></span>
+            <a class="next" href="#"><i class="glyphicon glyphicon-chevron-right"></i></a>
+          </th>
+        </tr>
+        <tr class="days-header">
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    </div>
+    </div>
+  </div>
+  <p class="text-danger">
+  	{{ form.expiration.errors.as_text }}
+  </p>
+  <div class="form-group">
+    <button class="btn btn-primary btn-sm" type="submit">Add</button>
+    <a class="btn btn-primary btn-sm" href="{% url 'products:index' %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
