@@ -135,10 +135,6 @@
         {% block userlinks %}
           <a href="{% url 'pages.views.logout_view' %}">{% trans 'Log out' %}</a>
         {% endblock %}
-      {% else %}
-        {% block adminlink %}
-          <a href="/admin">{% trans 'Admin Site' %}</a>
-        {% endblock %}
       {% endif %}
     </p>
   </div><!-- /.navbar-collapse -->
